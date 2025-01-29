@@ -2,13 +2,14 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const User = require("../models/User");
 dotenv.config();
-dotenv.config();
+
 const JWT_SECRET = process.env.JWT_SECRET || "1535478";
 
 const jwt_verify = async (req, res, next) => {
   try {
-    const token = req.headers.accesstoken;
-    console.log(token);
+    let token = req.headers.authorization;
+    console.log(req.headers);
+     token = token.split(" ")[1];
     if (!token) {
       return res.status(403).json({ message: "Access denied" });
     } else {
@@ -17,13 +18,14 @@ const jwt_verify = async (req, res, next) => {
         const user_details = await User.findById(decoded.data);
         console.log(user_details);
         if (user_details) {
-          res
-            .send({ success: "logged in user details", data: user_details })
-            .status(200);
+          // res
+          //   .send({ success: "logged in user details", data: user_details })
+          //   .status(200);
+          next();
         } else {
           res.status(404).send({ message: "User not found" });
         }
-      });
+     });
     }
   } catch (error) {
     console.error("Error during login:", error);

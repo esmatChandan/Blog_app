@@ -16,7 +16,7 @@
     <div class="glass-container">
       <div class="login-card">
         <h1 class="login-heading">Sign In</h1>
-        <form class="login-form" action="/login" method="POST">
+        <form class="login-form" action="/api/user_login" method="POST">
           <div class="form-group">
             <input
               type="email"
@@ -38,8 +38,9 @@
           <div class="form-group">
             <button type="submit" class="btn-submit">Login</button>
           </div>
+          <p class="forgot-password">Forgot your password?</p>
+          <a href="/register" class="create-acc">Create an Account</a>
         </form>
-        <p class="forgot-password">Forgot your password?</p>
       </div>
     </div>
   </body>

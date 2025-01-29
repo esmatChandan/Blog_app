@@ -6,11 +6,11 @@ const jwt_verify = require('../controller/authentication');
 const { userlogin, register, getall, logoutUser } = require('../controller/auth_controller');
 
 
-router.get('/users', getall);
+router.get('/users', jwt_verify, getall);
 router.post('/register', register);
 router.post('/user_login', userlogin);
 router.post('/user_logout', logoutUser);
-router.post('/auth', jwt_verify);
+//router.post('/auth', jwt_verify);
 
 
 // router.get('/users', async (req, res) => {

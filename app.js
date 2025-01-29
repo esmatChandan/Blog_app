@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const router = require("./routes/auth.js");
+const authroutes = require("./routes/auth.js");
 const postRoutes = require("./routes/postRoutes");
 const indexRoutes = require("./routes/indexRoutes");
 
@@ -21,17 +21,20 @@ const connectDb = async () => {
     console.log("MongoDB Not Connected");
   }
 };
-
+app.use(express.static('public'));
 // Set the view engine to EJS
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+app.use(express.urlencoded({ extended: true }));
 
 
 // Use the user routes
 app.use(express.json());
 app.use('/', indexRoutes);
-app.use("/api", router);
+app.use("/api", authroutes);
 app.use("/posts", postRoutes);
+// app.use("/blogs", );
+app.use('/blogs', require('./routes/indexRoutes'));
 
 
 // Start the server

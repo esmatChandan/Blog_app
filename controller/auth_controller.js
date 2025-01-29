@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
+const post = require("../models/Post");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -16,7 +17,7 @@ const getall = async (req, res) => {
 
 // Register user
 const register = async (req, res) => {
-  const { name, email,username, password } = req.body;
+  const { name, email, phone, password } = req.body;
   try {
     // Check if the email already exists
     let user = await User.findOne({ email });
@@ -25,8 +26,8 @@ const register = async (req, res) => {
       return res
         .status(400)
         .json({ success: false, message: "Email already exists." });
-        
     }
+
     // Hash the password
     const salt = await bcrypt.genSalt(10);
     const hashpassword = await bcrypt.hash(password, salt);
@@ -35,25 +36,23 @@ const register = async (req, res) => {
     const NewUser = new User({
       name,
       email,
-      username,
+      phone,
       password: hashpassword,
     });
 
     // Save the new user
     await NewUser.save();
 
-    res.status(201).json({
-      success: true,
-      message: "User successfully created",
-      data: NewUser,
-    });
-  } catch (err) {
-    console.error(err.message);
-    res
-      .status(500)
-      .json({ success: false, message: "Internal server error, try again" });
+    // Redirect to the blogs page upon successful registration
+    res.render("login",
+    );
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({ message: "Server error", error });
   }
 };
+
 
 // Login user
 
@@ -63,6 +62,7 @@ const userlogin = async (req, res) => {
 
     // Check if the user exists
     const existsUser = await User.findOne({ email });
+    const posts = await post.find({}).populate("author");
 
     if (!existsUser) {
       return res.status(404).json({ message: "User not found" });
@@ -75,16 +75,26 @@ const userlogin = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    // Handle successful login (e.g., generate token, session, etc.)
+     //Handle successful login (e.g., generate token, session, etc.)
     const token = jwt.sign({ data: existsUser._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
 
-    res.status(200).json({ message: "Login successful", accesstoken: token });
+    // Render the blogs.ejs file upon successful login
+    const payload = {
+      message: "Login successful ",
+      
+    };
+  //const user = await User.find({}).populate( "name");
+  console.log(token);
+    res.render("blogs", {
+      user: existsUser , posts,
+      response: token,
+    } );
+    
   } catch (error) {
-    // Handle errors
     console.error("Error during login:", error);
-    res.status(500).json({ message: "An error occurred during login" });
+    res.status(500).json({ message: "Server error", error });
   }
 };
 
