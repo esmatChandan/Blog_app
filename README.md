@@ -1,4 +1,5 @@
-# Social Media App
+# BlogHaven 
+ Social Media App !
 
 A simple social media application built using **Node.js, Express.js, MongoDB, and EJS** that allows users to authenticate, create/edit/delete posts, comment on posts, and like posts.
 
