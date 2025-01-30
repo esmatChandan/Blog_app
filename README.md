@@ -21,7 +21,7 @@ A simple social media application built using **Node.js, Express.js, MongoDB, an
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/your-username/social-media-app.git
+   git clone https://github.com/esmatChandan/Blog_app
    cd social-media-app
    ```
 
